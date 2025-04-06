@@ -2,7 +2,7 @@
 
 ระบบวิเคราะห์ความรู้สึก (Sentiment Analysis) ที่รองรับทั้งภาษาไทยและภาษาอังกฤษ พร้อม Dashboard สำหรับแสดงผลและทดสอบ API
 
-![Dashboard Screenshot](https://via.placeholder.com/800x400?text=Thai-English+Sentiment+Analysis+Dashboard)
+![Dashboard Screenshot](https://media.discordapp.net/attachments/1019596138975867014/1358531954022158426/image.png?ex=67f42efa&is=67f2dd7a&hm=1e616c6118c331e68966b4e772ab79efa8fcd81522efe216595196ff64692dd6&=&format=webp&quality=lossless)
 
 ## คุณสมบัติ
 
