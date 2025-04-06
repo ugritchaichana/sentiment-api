@@ -1,0 +1,62 @@
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Text</th>
+                <th>Sentiment</th>
+                <th>Confidence</th>
+                <th>Language</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for history in history_items %}
+            <tr>
+                <td>{{ history.id }}</td>
+                <td>{{ history.text|truncate(30) }}</td>
+                <td class="sentiment-{{ history.sentiment|lower }}">{{ history.sentiment }}</td>
+                <td>{{ history.confidence|round(1) }}%</td>
+                <td>{{ history.language|capitalize }}</td>
+                <td>{{ history.created_at|format_datetime }}</td>
+                <td>
+                    <button 
+                        class="btn btn-sm btn-outline-info" 
+                        hx-get="/history/{{ history.id }}" 
+                        hx-target="#detailsModal .modal-content"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#detailsModal">
+                        Details
+                    </button>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="text-center">No history records found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+{% if pages > 1 %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item {{ 'disabled' if page == 1 else '' }}">
+            <a class="page-link" href="#" hx-get="/history-partial?page={{ page-1 }}" hx-target="#history-table">Previous</a>
+        </li>
+        
+        {% for p in range(1, pages + 1) %}
+        <li class="page-item {{ 'active' if p == page else '' }}">
+            <a class="page-link" href="#" hx-get="/history-partial?page={{ p }}" hx-target="#history-table">{{ p }}</a>
+        </li>
+        {% endfor %}
+        
+        <li class="page-item {{ 'disabled' if page == pages else '' }}">
+            <a class="page-link" href="#" hx-get="/history-partial?page={{ page+1 }}" hx-target="#history-table">Next</a>
+        </li>
+    </ul>
+</nav>
+{% endif %} 

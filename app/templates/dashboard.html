@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Sentiment Analysis{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4">Dashboard</h2>
+        
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-header">Positive Sentiments</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ stats.positive_count }}</h5>
+                        <p class="card-text">{{ stats.positive_percent }}% of total analyses</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Neutral Sentiments</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ stats.neutral_count }}</h5>
+                        <p class="card-text">{{ stats.neutral_percent }}% of total analyses</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-header">Negative Sentiments</div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ stats.negative_count }}</h5>
+                        <p class="card-text">{{ stats.negative_percent }}% of total analyses</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">Language Distribution</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <p>Thai: {{ stats.thai_count }} ({{ stats.thai_percent }}%)</p>
+                                <p>English: {{ stats.english_count }} ({{ stats.english_percent }}%)</p>
+                                <p>Mixed: {{ stats.mixed_count }} ({{ stats.mixed_percent }}%)</p>
+                            </div>
+                            <div class="col-6">
+                                <canvas id="languageChart" width="100" height="100"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">Recent Activity</div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Text</th>
+                                        <th>Sentiment</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for history in recent_history %}
+                                    <tr>
+                                        <td>{{ history.text|truncate(30) }}</td>
+                                        <td class="sentiment-{{ history.sentiment|lower }}">{{ history.sentiment }}</td>
+                                        <td>{{ history.created_at|format_datetime }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <a href="/history" class="btn btn-sm btn-outline-secondary">View All History</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Language chart
+    var ctx = document.getElementById('languageChart').getContext('2d');
+    var languageChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Thai', 'English', 'Mixed'],
+            datasets: [{
+                data: [{{ stats.thai_count }}, {{ stats.english_count }}, {{ stats.mixed_count }}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %} 

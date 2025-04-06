@@ -1,0 +1,56 @@
+<div class="border rounded p-3 mb-3">
+    <div class="mb-2">
+        <strong>Analyzed Text:</strong>
+        <div class="border rounded p-2 bg-light">{{ result.text }}</div>
+    </div>
+    
+    <div class="mb-2">
+        <strong>Sentiment:</strong>
+        <span class="fw-bold sentiment-{{ result.sentiment|lower }}">{{ result.sentiment }}</span>
+    </div>
+    
+    <div class="mb-2">
+        <strong>Confidence:</strong> {{ result.confidence|round(1) }}%
+    </div>
+    
+    <div class="mb-2">
+        <strong>Language:</strong> {{ result.language|capitalize }}
+    </div>
+    
+    <div class="mb-2">
+        <strong>Probabilities:</strong>
+        
+        <div class="progress mb-2">
+            <div 
+                class="progress-bar bg-success" 
+                role="progressbar" 
+                style="width: {{ result.probabilities.Positive|default(0)|round(1) }}%" 
+                aria-valuenow="{{ result.probabilities.Positive|default(0)|round(1) }}" 
+                aria-valuemin="0" 
+                aria-valuemax="100">Positive: {{ result.probabilities.Positive|default(0)|round(1) }}%</div>
+        </div>
+        <div class="progress mb-2">
+            <div 
+                class="progress-bar bg-primary" 
+                role="progressbar" 
+                style="width: {{ result.probabilities.Neutral|default(0)|round(1) }}%" 
+                aria-valuenow="{{ result.probabilities.Neutral|default(0)|round(1) }}" 
+                aria-valuemin="0" 
+                aria-valuemax="100">Neutral: {{ result.probabilities.Neutral|default(0)|round(1) }}%</div>
+        </div>
+        <div class="progress mb-2">
+            <div 
+                class="progress-bar bg-danger" 
+                role="progressbar" 
+                style="width: {{ result.probabilities.Negative|default(0)|round(1) }}%" 
+                aria-valuenow="{{ result.probabilities.Negative|default(0)|round(1) }}" 
+                aria-valuemin="0" 
+                aria-valuemax="100">Negative: {{ result.probabilities.Negative|default(0)|round(1) }}%</div>
+        </div>
+    </div>
+</div>
+
+<div class="border rounded p-3">
+    <h6>JSON Response:</h6>
+    <pre><code>{{ result_json }}</code></pre>
+</div> 

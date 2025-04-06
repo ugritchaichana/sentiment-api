@@ -1,0 +1,24 @@
+services:
+  # Web service
+  - type: web
+    name: sentiment-analysis-api
+    env: docker
+    region: singapore  # เลือกภูมิภาคที่เหมาะสม (singapore, oregon, ohio, frankfurt)
+    plan: free  # อัพเกรดตามต้องการ
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sentiment-analysis-db
+          property: connectionString
+      - key: MODEL_PATH
+        value: /app/thai_english_sentiment_model.pkl
+
+databases:
+  # ฐานข้อมูล PostgreSQL
+  - name: sentiment-analysis-db
+    region: singapore  # เลือกภูมิภาคที่เหมาะสม
+    plan: free  # อัพเกรดตามต้องการ
+    databaseName: sentimentdb
+    user: postgres 

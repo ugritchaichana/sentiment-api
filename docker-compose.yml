@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/sentimentdb
+      - MODEL_PATH=/app/thai_english_sentiment_model.pkl
+    volumes:
+      - ./:/app
+      - ./app/templates:/app/app/templates
+      - ./app/static:/app/app/static
+    command: uvicorn app.main:app --host 0.0.0.0
+
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=sentimentdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

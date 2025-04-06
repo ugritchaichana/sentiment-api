@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Sentiment Analysis{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 text-center mb-4">
+        <h1 class="display-5">Thai-English Sentiment Analysis</h1>
+        <p class="lead">Analyze sentiment in both Thai and English texts</p>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Dashboard</h5>
+                <p class="card-text">View statistics and charts of all sentiment analyses.</p>
+                <a href="/dashboard" class="btn btn-primary">View Dashboard</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">API Tester</h5>
+                <p class="card-text">Test the sentiment analysis API directly from your browser.</p>
+                <a href="/api-tester" class="btn btn-primary">Try API</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Analysis History</h5>
+                <p class="card-text">View all previous sentiment analyses performed through the API.</p>
+                <a href="/history" class="btn btn-primary">View History</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">API Documentation</div>
+            <div class="card-body">
+                <h5>Predict Sentiment</h5>
+                <p><code>POST /predict</code></p>
+                
+                <h6>Request Body:</h6>
+                <pre><code>{
+  "text": "Your text here in Thai or English"
+}</code></pre>
+                
+                <h6>Response:</h6>
+                <pre><code>{
+  "text": "Your text here in Thai or English",
+  "sentiment": "Positive",
+  "confidence": 85.5,
+  "probabilities": {
+    "Positive": 85.5,
+    "Neutral": 10.5,
+    "Negative": 4.0
+  }
+}</code></pre>
+                
+                <div class="mt-3">
+                    <a href="/docs" target="_blank" class="btn btn-outline-secondary">View Complete API Docs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
