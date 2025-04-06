@@ -29,12 +29,15 @@ class SentimentHistory(Base):
     language = Column(String(20))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
-    # เพิ่มฟิลด์สำหรับรองรับข้อมูลผู้ใช้และแพลตฟอร์ม
+    # เพิ่มฟิลด์เหล่านี้ใน migration แทน แต่ไม่ใช้ในโมเดลเพื่อให้ทำงานได้กับข้อมูลเดิม
+    # ฟิลด์เหล่านี้จะถูกเพิ่มโดย migration script
+    """
     user_id = Column(String(100), nullable=True, index=True)
     user_name = Column(String(200), nullable=True)
-    platform = Column(String(20), nullable=True, index=True)  # "line", "discord", "web"
+    platform = Column(String(20), nullable=True, index=True)
     group_id = Column(String(100), nullable=True, index=True)
     group_name = Column(String(200), nullable=True)
+    """
     
     def __repr__(self):
         return f"<SentimentHistory(id={self.id}, sentiment={self.sentiment}, confidence={self.confidence})>"

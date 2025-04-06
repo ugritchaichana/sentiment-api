@@ -1,31 +1,63 @@
 version: '3'
 
 services:
-  api:
+  sentiment-api:
     build: .
+    restart: always
     ports:
-      - "8000:8000"
+      - "8001:8000"
     depends_on:
-      - db
+      - sentiment-db
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/sentimentdb
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD:-postgres}@sentiment-db:5432/sentimentdb
       - MODEL_PATH=/app/thai_english_sentiment_model.pkl
+      - DEBUG=false
     volumes:
-      - ./:/app
       - ./app/templates:/app/app/templates
       - ./app/static:/app/app/static
-    command: uvicorn app.main:app --host 0.0.0.0
+      - sentiment_model_data:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --workers 2
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    container_name: sentiment-api-app
 
-  db:
+  sentiment-db:
     image: postgres:14
+    restart: always
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       - POSTGRES_DB=sentimentdb
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - sentiment_postgres_data:/var/lib/postgresql/data
+    command: postgres -c max_connections=100 -c shared_buffers=256MB
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    container_name: sentiment-api-db
+
+  sentiment-nginx:
+    image: nginx:1.21-alpine
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/html:/usr/share/nginx/html
+    depends_on:
+      - sentiment-api
+    container_name: sentiment-api-nginx
 
 volumes:
-  postgres_data:
+  sentiment_postgres_data:
+    driver: local
+  sentiment_model_data:
+    driver: local
